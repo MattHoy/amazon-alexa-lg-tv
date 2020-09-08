@@ -10,6 +10,7 @@ import os
 import sys
 import urllib
 
+
 class HashableDict(dict):
     def __hash__(self):
         return hash(frozenset(self.items()))
@@ -125,7 +126,7 @@ def LGTVScan(first_only=False):
                     'address': address[0]
                 })
         except Exception as e:
-            print e.message
+            print(e.message)
             attempts -= 1
             continue
 
@@ -219,7 +220,7 @@ class LGTVClient(WebSocketClient):
 
     def __exec_command(self):
         if self.__handshake_done is False:
-            print "Error: Handshake failed"
+            print("Error: Handshake failed")
         if self.__waiting_command is None or len(self.__waiting_command.keys()) == 0:
             self.close()
             return
@@ -229,7 +230,7 @@ class LGTVClient(WebSocketClient):
 
     def exec_command(self, command, args):
         if command not in self.__class__.__dict__.keys():
-            usage("Invalid command")
+            print("Invalid command")
         self.__waiting_command = {command: args}
 
     def __store_settings(self):
@@ -252,12 +253,12 @@ class LGTVClient(WebSocketClient):
         self.send(json.dumps(hello_data))
 
     def closed(self, code, reason=None):
-        print json.dumps({
+        print(json.dumps({
             "closing": {
                 "code": code,
                 "reason": reason
             }
-        })
+        }))
 
     def received_message(self, response):
         if self.__waiting_callback:
@@ -266,26 +267,24 @@ class LGTVClient(WebSocketClient):
     def __defaultHandler(self, response):
         # {"type":"response","id":"0","payload":{"returnValue":true}}
         if response['type'] == "error":
-            print json.dumps(response)
+            print(json.dumps(response))
             self.close()
         if "returnValue" in response["payload"] and response["payload"]["returnValue"] is True:
-	    if (response['id'] == 'channels_0'):
-		with open('tvlists.json', 'w') as outfile:
-			json.dump(response['payload']['channelList'], outfile)
-		outfile.close()
-	    elif (response['id'] == 'launcher_0'):
-		with open('applists.json', 'w') as outfile:
-    			json.dump(response['payload']['launchPoints'], outfile)
-		outfile.close()
-            print json.dumps(response)
+            if (response['id'] == 'channels_0'):
+                with open('tvlists.json', 'w') as outfile:
+                    json.dump(response['payload']['channelList'], outfile)
+            elif (response['id'] == 'launcher_0'):
+                with open('applists.json', 'w') as outfile:
+                    json.dump(response['payload']['launchPoints'], outfile)
+            print(json.dumps(response))
             self.close()
         else:
-            print json.dumps(response)
+            print(json.dumps(response))
 
     def __prompt(self, response):
         # {"type":"response","id":"register_0","payload":{"pairingType":"PROMPT","returnValue":true}}
         if response['payload']['pairingType'] == "PROMPT":
-            print "Please accept the pairing request on your LG TV"
+            print("Please accept the pairing request on your LG TV")
             self.__waiting_callback = self.__set_client_key
 
     def __handshake(self, response):
@@ -303,7 +302,7 @@ class LGTVClient(WebSocketClient):
 
     def on(self):
         if not self.__macAddress:
-            print "Client must have been powered on and paired before power on works"
+            print("Client must have been powered on and paired before power on works")
         wol.send_magic_packet(self.__macAddress)
 
     def off(self):
