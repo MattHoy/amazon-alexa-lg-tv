@@ -59,14 +59,14 @@ def searchTVchannels(TV_Channel):
 		if channel['channelNumber'] == TV_Channel:
 		    return channel['channelId']
 	print('NO CHANNEL FOUND')
-		    
+
 def searchApps(App_Name):
 	with open('applists.json') as f:
 		AppList = json.load(f)
 	for app in AppList:
 		if (app['title'].lower() == App_Name.lower()):
 		    return app['id']
-		
+
 
 def LGparser(AlexaCommand):
     if len(AlexaCommand) < 1:
@@ -92,10 +92,10 @@ def LGparser(AlexaCommand):
     elif AlexaCommand[0] == "auth":
         if len(AlexaCommand) < 2:
             usage("Hostname or IP is required for auth")
-        
+
         if os.path.exists("lgtv.json"):
             os.remove("lgtv.json")
-            
+
         ws = LGTVClient(AlexaCommand[1])
         ws.connect()
         ws.run_forever()
@@ -110,7 +110,7 @@ def LGparser(AlexaCommand):
                 args = parseargs(AlexaCommand[0], AlexaCommand[1:])
             except Exception as e:
                 usage(e.message)
-	    ws.connect()
+        ws.connect()
     	    ws.exec_command(AlexaCommand[0], args)
     	    ws.run_forever()
         except KeyboardInterrupt:

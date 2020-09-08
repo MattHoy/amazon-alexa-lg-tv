@@ -4,7 +4,7 @@ lgtv.LGparser(['scan'])
 
 auth_ip = input('Enter IP of TV : ')
 
-lgtv.LGparser(['auth',auth_ip])
+lgtv.LGparser(['auth', auth_ip])
 
 
 lgtv.LGparser(['listChannels'])
